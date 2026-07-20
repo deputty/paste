@@ -3,4 +3,17 @@ main = "build/index.js"
 compatibility_date = "2026-07-20"
 
 [build]
-command = "cargo install -q \"worker-build@^0.8\" && worker-build --release"
+command = """
+rm -r ./pages/dist/* 2>/dev/null; \
+mkdir -p ./pages/dist && \
+cargo install -q \"worker-build@^0.8\" && worker-build --release && \
+cp -r ./build/* ./pages/dist/ && \
+mv ./pages/dist/index.js ./pages/dist/_worker.js
+"""
+
+[observability]
+enabled = true
+
+[[kv_namespaces]]
+binding = "KV"
+id = "<NAMESPACE_ID>"
